@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+/* Floating Leaf Animation */
+@keyframes float-leaf {
+  0% {
+    transform: translateY(-100px) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.4;
+  }
+  50% {
+    transform: translateY(250px) translateX(20px) rotate(180deg);
+    opacity: 0.35;
+  }
+  90% {
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateY(600px) translateX(30px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.animate-float-leaf {
+  animation: float-leaf linear infinite;
+  will-change: transform, opacity;
+}
