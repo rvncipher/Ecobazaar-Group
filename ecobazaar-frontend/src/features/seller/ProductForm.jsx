@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import Navbar from '../../components/Navbar';
+import Layout from '../../components/Layout';
 import { createProduct, updateProduct, getProductById } from '../products/productAPI';
 import { PRODUCT_CATEGORIES, STORAGE_KEYS } from '../../utils/constants';
 
@@ -142,9 +142,7 @@ const ProductForm = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Navbar />
-
+    <Layout>
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
@@ -316,7 +314,7 @@ const ProductForm = () => {
           </form>
         </div>
       </div>
-    </div>
+    </Layout>
   );
 };
 

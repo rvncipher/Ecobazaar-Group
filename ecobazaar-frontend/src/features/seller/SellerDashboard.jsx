@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { Package, CheckCircle, Clock, PlusCircle, Edit2, Trash2, BarChart3, Filter } from 'lucide-react';
-import Navbar from '../../components/Navbar';
+import { Package, CheckCircle, Clock, PlusCircle, Edit2, Trash2, BarChart3, Filter, FileText, ShoppingCart } from 'lucide-react';
+import Layout from '../../components/Layout';
 import ProductList from '../../features/products/ProductList';
 import { getMyProducts, deleteProduct } from '../../features/products/productAPI';
 import { STORAGE_KEYS, PRODUCT_CATEGORIES } from '../../utils/constants';
@@ -115,9 +115,7 @@ const SellerDashboard = () => {
   const categoryStats = getCategoryStats();
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Navbar />
-
+    <Layout>
       <div className="container mx-auto px-4 py-6">
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
@@ -183,6 +181,45 @@ const SellerDashboard = () => {
               <BarChart3 className="w-12 h-12 opacity-80" />
             </div>
           </div>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <button
+            onClick={() => navigate('/seller/orders')}
+            className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-all flex items-center justify-between group"
+          >
+            <div className="flex items-center gap-4">
+              <div className="bg-blue-100 rounded-lg p-3">
+                <ShoppingCart className="w-6 h-6 text-blue-600" />
+              </div>
+              <div className="text-left">
+                <h3 className="text-lg font-bold text-gray-800">View Orders</h3>
+                <p className="text-sm text-gray-600">See all orders containing your products</p>
+              </div>
+            </div>
+            <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+              →
+            </div>
+          </button>
+
+          <button
+            onClick={() => navigate('/seller/report')}
+            className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-all flex items-center justify-between group"
+          >
+            <div className="flex items-center gap-4">
+              <div className="bg-purple-100 rounded-lg p-3">
+                <FileText className="w-6 h-6 text-purple-600" />
+              </div>
+              <div className="text-left">
+                <h3 className="text-lg font-bold text-gray-800">Monthly Report</h3>
+                <p className="text-sm text-gray-600">View sales analytics and carbon impact</p>
+              </div>
+            </div>
+            <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+              →
+            </div>
+          </button>
         </div>
 
         {/* Category Breakdown */}
@@ -417,7 +454,7 @@ const SellerDashboard = () => {
           </div>
         )}
       </div>
-    </div>
+    </Layout>
   );
 };
 

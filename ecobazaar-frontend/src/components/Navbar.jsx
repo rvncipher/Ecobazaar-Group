@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import { ShoppingCart, Leaf, Package } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { ShoppingCart, Leaf, ChevronDown, User, Package, BarChart3, ShoppingBag, Shield } from 'lucide-react';
 import { STORAGE_KEYS } from '../utils/constants';
 import { getCart } from '../features/cart/cartAPI';
 
@@ -8,6 +8,8 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [cartItemCount, setCartItemCount] = useState(0);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     const userData = localStorage.getItem(STORAGE_KEYS.USER);
@@ -35,11 +37,32 @@ const Navbar = () => {
     return () => clearInterval(interval);
   }, [user]);
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   const handleLogout = () => {
     localStorage.removeItem(STORAGE_KEYS.TOKEN);
     localStorage.removeItem(STORAGE_KEYS.USER);
     setUser(null);
+    setDropdownOpen(false);
     navigate('/');
+  };
+
+  const toggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen);
+  };
+
+  const closeDropdown = () => {
+    setDropdownOpen(false);
   };
 
   return (
@@ -97,46 +120,133 @@ const Navbar = () => {
                   )}
                 </Link>
 
-                {/* Seller Links */}
-                {user.role === 'SELLER' && (
-                  <Link
-                    to="/seller/dashboard"
-                    className="px-4 py-2 text-gray-700 hover:text-green-600 font-medium transition flex items-center gap-2"
-                  >
-                    <Package className="w-4 h-4" /> My Products
-                  </Link>
-                )}
-
-                {/* Admin Links */}
-                {user.role === 'ADMIN' && (
-                  <Link
-                    to="/admin/dashboard"
-                    className="px-4 py-2 text-gray-700 hover:text-green-600 font-medium transition"
-                  >
-                    ⚙️ Admin Panel
-                  </Link>
-                )}
-
-                {/* Common User Links */}
-                <Link
-                  to="/profile"
-                  className="px-4 py-2 text-gray-700 hover:text-green-600 font-medium transition"
-                >
-                  👤 Profile
-                </Link>
-
-                {/* User Info & Logout */}
-                <div className="flex items-center gap-4 pl-4 border-l border-gray-300">
-                  <div className="text-sm">
-                    <p className="font-semibold text-gray-800">{user.name}</p>
-                    <p className="text-xs text-gray-500">{user.role}</p>
-                  </div>
+                {/* Profile Dropdown */}
+                <div className="relative" ref={dropdownRef}>
                   <button
-                    onClick={handleLogout}
-                    className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition text-sm font-medium"
+                    onClick={toggleDropdown}
+                    className="flex items-center gap-2 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition"
                   >
-                    Logout
+                    <div className="w-9 h-9 bg-green-600 rounded-full flex items-center justify-center text-white font-semibold">
+                      {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
+                    </div>
+                    <div className="text-left hidden md:block">
+                      <p className="font-semibold text-sm text-gray-800">{user.name}</p>
+                      <p className="text-xs text-gray-500">{user.role}</p>
+                    </div>
+                    <ChevronDown size={16} className={`transition-transform ${dropdownOpen ? 'rotate-180' : ''}`} />
                   </button>
+
+                  {/* Dropdown Menu */}
+                  {dropdownOpen && (
+                    <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50">
+                      {/* User Info Section */}
+                      <div className="px-4 py-3 border-b border-gray-200">
+                        <p className="font-semibold text-gray-800">{user.name}</p>
+                        <p className="text-sm text-gray-500">{user.email}</p>
+                        <div className="mt-2 flex items-center gap-2">
+                          <span className="text-xs text-gray-600">Eco Score:</span>
+                          <span className="text-sm font-bold text-green-600">{user.ecoScore || 0} pts</span>
+                        </div>
+                      </div>
+
+                      {/* Menu Items */}
+                      <div className="py-1">
+                        <Link
+                          to="/profile"
+                          onClick={closeDropdown}
+                          className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-600 transition"
+                        >
+                          <User size={18} />
+                          <span className="font-medium">My Profile</span>
+                        </Link>
+
+                        <Link
+                          to="/orders"
+                          onClick={closeDropdown}
+                          className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-600 transition"
+                        >
+                          <Package size={18} />
+                          <span className="font-medium">My Orders</span>
+                        </Link>
+
+                        {/* Monthly Report - conditional based on user role */}
+                        {user.role === 'SELLER' ? (
+                          <Link
+                            to="/seller/report"
+                            onClick={closeDropdown}
+                            className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-600 transition"
+                          >
+                            <BarChart3 size={18} />
+                            <span className="font-medium">Sales Report</span>
+                          </Link>
+                        ) : (
+                          <Link
+                            to="/monthly-report"
+                            onClick={closeDropdown}
+                            className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-600 transition"
+                          >
+                            <BarChart3 size={18} />
+                            <span className="font-medium">Eco Report</span>
+                          </Link>
+                        )}
+
+                        {/* Seller Section */}
+                        {user.role === 'SELLER' && (
+                          <>
+                            <div className="border-t border-gray-200 my-1"></div>
+                            <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                              Seller Dashboard
+                            </div>
+                            <Link
+                              to="/seller/dashboard"
+                              onClick={closeDropdown}
+                              className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-600 transition"
+                            >
+                              <ShoppingBag size={18} />
+                              <span className="font-medium">My Products</span>
+                            </Link>
+
+                            <Link
+                              to="/seller/orders"
+                              onClick={closeDropdown}
+                              className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-600 transition"
+                            >
+                              <Package size={18} />
+                              <span className="font-medium">Manage Orders</span>
+                            </Link>
+                          </>
+                        )}
+
+                        {/* Admin Section */}
+                        {user.role === 'ADMIN' && (
+                          <>
+                            <div className="border-t border-gray-200 my-1"></div>
+                            <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                              Admin Panel
+                            </div>
+                            <Link
+                              to="/admin/dashboard"
+                              onClick={closeDropdown}
+                              className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-600 transition"
+                            >
+                              <Shield size={18} />
+                              <span className="font-medium">Admin Dashboard</span>
+                            </Link>
+                          </>
+                        )}
+
+                        {/* Logout */}
+                        <div className="border-t border-gray-200 mt-1 pt-1">
+                          <button
+                            onClick={handleLogout}
+                            className="w-full flex items-center gap-3 px-4 py-2 text-red-600 hover:bg-red-50 transition font-medium text-left"
+                          >
+                            <span>Logout</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </>
             )}
