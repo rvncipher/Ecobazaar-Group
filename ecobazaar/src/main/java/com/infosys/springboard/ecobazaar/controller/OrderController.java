@@ -169,4 +169,144 @@ public class OrderController {
                     .body(Map.of("error", e.getMessage()));
         }
     }
+
+    // ========== SELLER ENDPOINTS ==========
+
+    /**
+     * Get seller's orders
+     */
+    @GetMapping("/seller/my-orders")
+    public ResponseEntity<?> getSellerOrders(@RequestHeader("Authorization") String authHeader) {
+        try {
+            User seller = getUserFromToken(authHeader);
+            
+            // Robust role validation
+            String userRole = seller.getRole();
+            if (userRole == null || userRole.trim().isEmpty()) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(Map.of("error", "Access denied: No role assigned to user"));
+            }
+            
+            if (!"SELLER".equalsIgnoreCase(userRole.trim())) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(Map.of("error", "Access denied: Seller access required. Your role: " + userRole));
+            }
+
+            List<Order> orders = orderService.getSellerOrders(seller.getId());
+            return ResponseEntity.ok(orders);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    /**
+     * Update order status (SELLER)
+     */
+    @PutMapping("/seller/{orderId}/status")
+    public ResponseEntity<?> updateOrderStatusBySeller(
+            @PathVariable Long orderId,
+            @RequestBody Map<String, String> request,
+            @RequestHeader("Authorization") String authHeader) {
+        try {
+            User seller = getUserFromToken(authHeader);
+
+            // Robust role validation
+            String userRole = seller.getRole();
+            if (userRole == null || !"SELLER".equalsIgnoreCase(userRole.trim())) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(Map.of("error", "Access denied: Seller access required"));
+            }
+
+            String statusStr = request.get("status");
+            Order.OrderStatus status = Order.OrderStatus.valueOf(statusStr);
+
+            Order order = orderService.updateOrderStatusBySeller(orderId, seller.getId(), status);
+            return ResponseEntity.ok(order);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", "Invalid status value"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    // ========== RETURN ENDPOINTS ==========
+
+    /**
+     * Request return for an order
+     */
+    @PostMapping("/{orderId}/return")
+    public ResponseEntity<?> requestReturn(
+            @PathVariable Long orderId,
+            @RequestBody Map<String, String> request,
+            @RequestHeader("Authorization") String authHeader) {
+        try {
+            User user = getUserFromToken(authHeader);
+            String reason = request.get("reason");
+
+            if (reason == null || reason.trim().isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("error", "Return reason is required"));
+            }
+
+            Order order = orderService.requestReturn(orderId, user.getId(), reason);
+            return ResponseEntity.ok(order);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    /**
+     * Approve return request (SELLER)
+     */
+    @PutMapping("/seller/{orderId}/return/approve")
+    public ResponseEntity<?> approveReturn(
+            @PathVariable Long orderId,
+            @RequestHeader("Authorization") String authHeader) {
+        try {
+            User seller = getUserFromToken(authHeader);
+
+            // Robust role validation
+            String userRole = seller.getRole();
+            if (userRole == null || !"SELLER".equalsIgnoreCase(userRole.trim())) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(Map.of("error", "Access denied: Seller access required"));
+            }
+
+            Order order = orderService.approveReturn(orderId, seller.getId());
+            return ResponseEntity.ok(order);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    /**
+     * Reject return request (SELLER)
+     */
+    @PutMapping("/seller/{orderId}/return/reject")
+    public ResponseEntity<?> rejectReturn(
+            @PathVariable Long orderId,
+            @RequestHeader("Authorization") String authHeader) {
+        try {
+            User seller = getUserFromToken(authHeader);
+
+            // Robust role validation
+            String userRole = seller.getRole();
+            if (userRole == null || !"SELLER".equalsIgnoreCase(userRole.trim())) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(Map.of("error", "Access denied: Seller access required"));
+            }
+
+            Order order = orderService.rejectReturn(orderId, seller.getId());
+            return ResponseEntity.ok(order);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", e.getMessage()));
+        }
+    }
 }

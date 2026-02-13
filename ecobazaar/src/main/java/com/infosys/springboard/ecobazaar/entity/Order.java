@@ -47,6 +47,23 @@ public class Order {
     @Column
     private LocalDateTime deliveredDate;
 
+    // Return fields
+    @Column(nullable = false)
+    private Boolean returnRequested = false;
+
+    @Column
+    private LocalDateTime returnRequestDate;
+
+    @Column(length = 500)
+    private String returnReason;
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    private ReturnStatus returnStatus;
+
+    @Column
+    private LocalDateTime returnResolvedDate;
+
     // Constructors
     public Order() {
     }
@@ -137,6 +154,46 @@ public class Order {
         this.deliveredDate = deliveredDate;
     }
 
+    public Boolean getReturnRequested() {
+        return returnRequested;
+    }
+
+    public void setReturnRequested(Boolean returnRequested) {
+        this.returnRequested = returnRequested;
+    }
+
+    public LocalDateTime getReturnRequestDate() {
+        return returnRequestDate;
+    }
+
+    public void setReturnRequestDate(LocalDateTime returnRequestDate) {
+        this.returnRequestDate = returnRequestDate;
+    }
+
+    public String getReturnReason() {
+        return returnReason;
+    }
+
+    public void setReturnReason(String returnReason) {
+        this.returnReason = returnReason;
+    }
+
+    public ReturnStatus getReturnStatus() {
+        return returnStatus;
+    }
+
+    public void setReturnStatus(ReturnStatus returnStatus) {
+        this.returnStatus = returnStatus;
+    }
+
+    public LocalDateTime getReturnResolvedDate() {
+        return returnResolvedDate;
+    }
+
+    public void setReturnResolvedDate(LocalDateTime returnResolvedDate) {
+        this.returnResolvedDate = returnResolvedDate;
+    }
+
     // Enum for Order Status
     public enum OrderStatus {
         PENDING,
@@ -145,5 +202,12 @@ public class Order {
         SHIPPED,
         DELIVERED,
         CANCELLED
+    }
+
+    // Enum for Return Status
+    public enum ReturnStatus {
+        PENDING,
+        APPROVED,
+        REJECTED
     }
 }

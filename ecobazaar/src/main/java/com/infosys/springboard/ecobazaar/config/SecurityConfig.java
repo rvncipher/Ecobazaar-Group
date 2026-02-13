@@ -4,6 +4,7 @@ import com.infosys.springboard.ecobazaar.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -15,6 +16,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 
 @Configuration
+@EnableMethodSecurity
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -43,6 +45,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/products/{id}/similar").permitAll()
                         .requestMatchers(HttpMethod.GET, "/products/recommendations/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/products/carbon-savings").permitAll()
+                        // Report endpoints - require authentication (handled by @PreAuthorize)
+                        .requestMatchers("/api/reports/**").authenticated()
                         // All other endpoints require authentication
                         .anyRequest().authenticated()
                 )

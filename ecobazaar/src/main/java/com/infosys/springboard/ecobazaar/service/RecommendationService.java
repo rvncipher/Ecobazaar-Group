@@ -50,7 +50,7 @@ public class RecommendationService {
         BigDecimal alternativeCarbon = alternative.getCarbonImpact().multiply(new BigDecimal(quantity));
         BigDecimal savings = currentCarbon.subtract(alternativeCarbon);
         
-        double savingsPercentage = savings.divide(currentCarbon, 4, BigDecimal.ROUND_HALF_UP)
+        double savingsPercentage = savings.divide(currentCarbon, 4, java.math.RoundingMode.HALF_UP)
                 .multiply(new BigDecimal(100)).doubleValue();
 
         Map<String, Object> result = new HashMap<>();

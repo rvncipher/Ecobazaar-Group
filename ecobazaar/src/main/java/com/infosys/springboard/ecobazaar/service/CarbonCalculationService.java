@@ -1,6 +1,5 @@
 package com.infosys.springboard.ecobazaar.service;
 
-import com.infosys.springboard.ecobazaar.entity.EcoRating;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -12,27 +11,33 @@ public class CarbonCalculationService {
     // Eco-rating thresholds (in kg CO₂e)
     private static final double ECO_FRIENDLY_THRESHOLD = 2.0;
     private static final double MODERATE_THRESHOLD = 10.0;
+    
+    // Eco-rating string constants
+    private static final String ECO_FRIENDLY = "ECO_FRIENDLY";
+    private static final String MODERATE = "MODERATE";
+    private static final String HIGH_IMPACT = "HIGH_IMPACT";
+    private static final String UNRATED = "UNRATED";
 
     /**
      * Calculate eco-rating based on carbon impact
      * @param carbonImpact Carbon footprint in kg CO₂e
-     * @return EcoRating enum value
+     * @return Eco-rating string value
      */
 
     /*Determining rating based on threshold ( == 2.0) */
     public String calculateEcoRating(BigDecimal carbonImpact) {
         if (carbonImpact == null) {
-            return EcoRating.UNRATED.name();
+            return UNRATED;
         }
 
         double impact = carbonImpact.doubleValue();
         
         if (impact < ECO_FRIENDLY_THRESHOLD) {
-            return EcoRating.ECO_FRIENDLY.name();
+            return ECO_FRIENDLY;
         } else if (impact <= MODERATE_THRESHOLD) {
-            return EcoRating.MODERATE.name();
+            return MODERATE;
         } else {
-            return EcoRating.HIGH_IMPACT.name();
+            return HIGH_IMPACT;
         }
     }
 
@@ -40,10 +45,17 @@ public class CarbonCalculationService {
      * Get eco-rating display name
      */
     public String getEcoRatingDisplayName(String ecoRating) {
-        try {
-            return EcoRating.valueOf(ecoRating).getDisplayName();
-        } catch (IllegalArgumentException e) {
-            return EcoRating.UNRATED.getDisplayName();
+        if (ecoRating == null) return "Unrated";
+        
+        switch (ecoRating) {
+            case ECO_FRIENDLY:
+                return "Eco-Friendly";
+            case MODERATE:
+                return "Moderate";
+            case HIGH_IMPACT:
+                return "High Impact";
+            default:
+                return "Unrated";
         }
     }
 
@@ -51,10 +63,17 @@ public class CarbonCalculationService {
      * Get eco-rating description
      */
     public String getEcoRatingDescription(String ecoRating) {
-        try {
-            return EcoRating.valueOf(ecoRating).getDescription();
-        } catch (IllegalArgumentException e) {
-            return EcoRating.UNRATED.getDescription();
+        if (ecoRating == null) return "Not yet rated";
+        
+        switch (ecoRating) {
+            case ECO_FRIENDLY:
+                return "Low carbon footprint (< 2 kg CO₂e)";
+            case MODERATE:
+                return "Moderate carbon footprint (2-10 kg CO₂e)";
+            case HIGH_IMPACT:
+                return "High carbon footprint (> 10 kg CO₂e)";
+            default:
+                return "Not yet rated";
         }
     }
 
@@ -106,20 +125,19 @@ public class CarbonCalculationService {
      * Get eco-score points based on eco-rating (for gamification)
      */
     public int getEcoScorePoints(String ecoRating) {
-        try {
-            EcoRating rating = EcoRating.valueOf(ecoRating);
-            switch (rating) {
-                case ECO_FRIENDLY:
-                    return 10;
-                case MODERATE:
-                    return 5;
-                case HIGH_IMPACT:
-                    return 0;
-                default:
-                    return 0;
-            }
-        } catch (IllegalArgumentException e) {
+        if (ecoRating == null) {
             return 0;
+        }
+        
+        switch (ecoRating) {
+            case ECO_FRIENDLY:
+                return 10;
+            case MODERATE:
+                return 5;
+            case HIGH_IMPACT:
+                return 0;
+            default:
+                return 0;
         }
     }
 }
