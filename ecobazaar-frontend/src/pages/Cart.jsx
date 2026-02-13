@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Trash2, Plus, Minus, ShoppingBag, Leaf, TrendingDown, AlertCircle, Truck, Sparkles } from 'lucide-react';
-import Navbar from '../components/Navbar';
+import Layout from '../components/Layout';
 import Loader from '../components/Loader';
 import { getCart, updateCartItem, removeCartItem, clearCart } from '../features/cart/cartAPI';
 import { getGreenerAlternatives } from '../features/recommendations/recommendationAPI';
@@ -125,21 +125,18 @@ const Cart = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <Navbar />
+      <Layout>
         <div className="flex justify-center items-center h-96">
           <Loader size="large" text="Loading cart..." />
         </div>
-      </div>
+      </Layout>
     );
   }
 
   const isEmpty = !cart || cart.items.length === 0;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Navbar />
-
+    <Layout>
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
@@ -418,7 +415,7 @@ const Cart = () => {
           </div>
         )}
       </div>
-    </div>
+    </Layout>
   );
 };
 

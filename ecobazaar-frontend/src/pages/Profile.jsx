@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Leaf, Mail, User, Shield, ArrowLeft, Award, Edit2, Save, CheckCircle, XCircle } from 'lucide-react'
-import Navbar from '../components/Navbar'
+import Layout from '../components/Layout'
 
 export default function Profile() {
   const [userEmail, setUserEmail] = useState('')
@@ -24,23 +24,9 @@ export default function Profile() {
       return
     }
     
-    // Try to get from localStorage first
-    const storedName = localStorage.getItem('userName')
-    const storedRole = localStorage.getItem('userRole')
-    const storedEcoScore = localStorage.getItem('userEcoScore')
-    const storedVerified = localStorage.getItem('userVerified')
-    
-    if (storedName && storedRole) {
-      setUserEmail(email)
-      setUserName(storedName)
-      setUserRole(storedRole)
-      setEcoScore(parseInt(storedEcoScore) || 0)
-      setVerified(storedVerified === 'true')
-      setEditedName(storedName)
-    } else {
-      // Fetch from backend if not in localStorage
-      fetchProfile(token)
-    }
+    setUserEmail(email)
+    // Always fetch latest profile data from backend to get updated eco score
+    fetchProfile(token)
   }, [navigate])
 
   const fetchProfile = async (token) => {
@@ -132,11 +118,7 @@ export default function Profile() {
   }
 
   return (
-    <div className="min-h-screen bg-linear-to-b from-green-50 to-white">
-      {/* Navigation */}
-      <Navbar />
-
-      {/* Profile Content */}
+    <Layout>
       <div className="max-w-4xl mx-auto px-4 py-12">
         {message && (
           <div className={`mb-4 p-4 rounded-lg ${message.includes('success') ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'}`}>
@@ -280,6 +262,6 @@ export default function Profile() {
           </div>
         </div>
       </div>
-    </div>
+    </Layout>
   )
 }

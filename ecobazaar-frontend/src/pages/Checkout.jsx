@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { ShoppingBag, Leaf, TrendingDown, CheckCircle, CreditCard, AlertTriangle, XCircle, Lightbulb } from 'lucide-react';
-import Navbar from '../components/Navbar';
+import Layout from '../components/Layout';
 import Loader from '../components/Loader';
 import { getCart } from '../features/cart/cartAPI';
 import { createOrder } from '../features/orders/orderAPI';
@@ -65,19 +65,17 @@ const Checkout = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <Navbar />
+      <Layout>
         <div className="flex justify-center items-center h-96">
           <Loader size="large" text="Loading checkout..." />
         </div>
-      </div>
+      </Layout>
     );
   }
 
   if (orderComplete) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <Navbar />
+      <Layout>
         <div className="container mx-auto px-4 py-16">
           <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-lg p-12 text-center">
             <div className="mb-6">
@@ -118,13 +116,12 @@ const Checkout = () => {
             </div>
           </div>
         </div>
-      </div>
+      </Layout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Navbar />
+    <Layout>
 
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
@@ -286,7 +283,7 @@ const Checkout = () => {
           </div>
         </div>
       </div>
-    </div>
+    </Layout>
   );
 };
 

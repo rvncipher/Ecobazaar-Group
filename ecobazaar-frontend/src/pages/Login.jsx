@@ -48,6 +48,7 @@ export default function Login() {
       
       // Store user object
       const user = {
+        id: data.id,
         email: data.email,
         name: data.name,
         role: data.role,
@@ -58,6 +59,7 @@ export default function Login() {
       
       // Also store individual fields for backward compatibility
       localStorage.setItem('token', data.token)
+      localStorage.setItem('userId', data.id)
       localStorage.setItem('userEmail', data.email)
       localStorage.setItem('userName', data.name)
       localStorage.setItem('userRole', data.role)

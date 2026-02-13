@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import Navbar from '../components/Navbar';
+import Layout from '../components/Layout';
 import SearchBar from '../features/products/SearchBar';
 import FilterPanel from '../features/products/FilterPanel';
 import ProductList from '../features/products/ProductList';
@@ -108,18 +108,14 @@ const Products = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Navbar */}
-      <Navbar />
-      
+    <Layout>
       {/* Header with Animated Leaves */}
       <div className="bg-linear-to-r from-green-600 via-green-500 to-emerald-500 text-white py-16 relative overflow-hidden">
         {/* Background overlay */}
         <div className="absolute inset-0 bg-black opacity-5"></div>
         
         {/* Animated Leaves */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {[...Array(8)].map((_, i) => (
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">{[ ...Array(8)].map((_, i) => (
             <div
               key={i}
               className="absolute animate-float-leaf opacity-0"
@@ -180,7 +176,7 @@ const Products = () => {
           </main>
         </div>
       </div>
-    </div>
+    </Layout>
   );
 };
 

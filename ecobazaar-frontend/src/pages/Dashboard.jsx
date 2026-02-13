@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ShoppingCart, Leaf, User, LogOut, Globe, CheckCircle, Truck } from 'lucide-react'
-import Navbar from '../components/Navbar'
+import Layout from '../components/Layout'
 import { STORAGE_KEYS } from '../utils/constants'
 
 export default function Dashboard() {
@@ -80,9 +80,8 @@ export default function Dashboard() {
   ]
 
   return (
-    <div className="min-h-screen bg-linear-to-b from-green-50 to-white">
-      {/* Navigation Bar */}
-      <Navbar />
+    <Layout>
+      <div className="min-h-screen bg-linear-to-b from-green-50 to-white">
 
       {/* Featured Products */}
       <section className="max-w-7xl mx-auto px-4 py-16">
@@ -171,6 +170,7 @@ export default function Dashboard() {
           <p>&copy; 2026 EcoBazaar. All rights reserved.</p>
         </div>
       </footer>
-    </div>
+      </div>
+    </Layout>
   )
 }

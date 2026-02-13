@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { ShoppingCart, ArrowLeft, Package, Leaf, TrendingDown, Award, Sparkles, GitCompare, Frown } from 'lucide-react';
-import Navbar from '../components/Navbar';
+import Layout from '../components/Layout';
 import Loader from '../components/Loader';
 import CarbonBadge from '../components/CarbonBadge';
 import EcoRatingBadge from '../components/EcoRatingBadge';
@@ -122,19 +122,17 @@ const ProductDetail = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <Navbar />
+      <Layout>
         <div className="flex justify-center items-center h-96">
           <Loader size="large" text="Loading product details..." />
         </div>
-      </div>
+      </Layout>
     );
   }
 
   if (error || !product) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <Navbar />
+      <Layout>
         <div className="container mx-auto px-4 py-16">
           <div className="text-center">
             <Frown className="w-24 h-24 text-gray-400 mx-auto mb-4" />
@@ -148,7 +146,7 @@ const ProductDetail = () => {
             </button>
           </div>
         </div>
-      </div>
+      </Layout>
     );
   }
 
@@ -157,9 +155,7 @@ const ProductDetail = () => {
     : getProductImageUrl(product.imageUrl, product.category);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Navbar />
-
+    <Layout>
       <div className="container mx-auto px-4 py-4">
         {/* Back Button */}
         <button
@@ -506,7 +502,7 @@ const ProductDetail = () => {
           </div>
         )}
       </div>
-    </div>
+    </Layout>
   );
 };
 

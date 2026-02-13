@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ShoppingCart, Leaf, Globe, CheckCircle, Truck } from 'lucide-react'
-import Navbar from '../components/Navbar'
+import Layout from '../components/Layout'
 import Loader from '../components/Loader'
 import EcoRatingBadge from '../components/EcoRatingBadge'
 import { getEcoFriendlyRecommendations } from '../features/recommendations/recommendationAPI'
@@ -29,9 +29,8 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-b from-green-50 to-white">
-      {/* Navigation Bar */}
-      <Navbar />
+    <Layout>
+      <div className="min-h-screen bg-linear-to-b from-green-50 to-white">
 
       {/* Hero Section */}
       <section 
@@ -186,6 +185,7 @@ export default function Home() {
           <p>being developed as a part of Infosys Springboard internship</p>
         </div>
       </footer>
-    </div>
+      </div>
+    </Layout>
   )
 }
