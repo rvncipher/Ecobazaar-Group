@@ -161,103 +161,178 @@ const Cart = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Cart Items */}
-            <div className="lg:col-span-2 space-y-4">
-              {cart.items.map((item) => (
-                <div key={item.id} className="bg-white rounded-xl shadow-md p-6">
-                  <div className="flex gap-6">
-                    {/* Product Image */}
-                    <div 
-                      className="w-32 h-32 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0 cursor-pointer"
-                      onClick={() => navigate(`/products/${item.product.id}`)}
-                    >
-                      <img
-                        src={getProductImageUrl(item.product.imageUrl, item.product.category)}
-                        alt={item.product.name}
-                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                        onError={(e) => {
-                          e.target.src = getProductImageUrl(null, item.product.category);
-                        }}
-                      />
-                    </div>
-
-                    {/* Product Info */}
-                    <div className="flex-1">
-                      <div className="flex justify-between items-start mb-2">
-                        <div>
-                          <h3 
-                            className="text-lg font-bold text-gray-800 cursor-pointer hover:text-green-600"
-                            onClick={() => navigate(`/products/${item.product.id}`)}
-                          >
-                            {item.product.name}
-                          </h3>
-                          <p className="text-sm text-gray-500">{item.product.category}</p>
-                        </div>
-                        <button
-                          onClick={() => handleRemoveItem(item.id)}
-                          disabled={updating}
-                          className="text-red-500 hover:text-red-700 transition disabled:opacity-50"
-                        >
-                          <Trash2 size={20} />
-                        </button>
+            {/* Left Column: Cart Items + Carbon Summary + Recommendations */}
+            <div className="lg:col-span-2 space-y-6">
+              {/* Cart Items */}
+              <div className="space-y-4">
+                {cart.items.map((item) => (
+                  <div key={item.id} className="bg-white rounded-xl shadow-md p-6">
+                    <div className="flex gap-6">
+                      {/* Product Image */}
+                      <div 
+                        className="w-32 h-32 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0 cursor-pointer"
+                        onClick={() => navigate(`/products/${item.product.id}`)}
+                      >
+                        <img
+                          src={getProductImageUrl(item.product.imageUrl, item.product.category)}
+                          alt={item.product.name}
+                          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                          onError={(e) => {
+                            e.target.src = getProductImageUrl(null, item.product.category);
+                          }}
+                        />
                       </div>
 
-                      <div className="flex items-center gap-4 mb-4">
-                        <span className="text-2xl font-bold text-green-600">
-                          {formatPrice(item.price)}
-                        </span>
-                        <span className="text-sm text-gray-500">
-                          {formatCarbonImpact(item.carbonImpact)} per unit
-                        </span>
-                      </div>
-
-                      {/* Quantity Controls */}
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <button
-                            onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
-                            disabled={updating || item.quantity <= 1}
-                            className="w-8 h-8 rounded-md border-2 border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed font-bold transition"
-                          >
-                            <Minus size={16} className="mx-auto" />
-                          </button>
-                          <span className="text-lg font-semibold text-gray-800 min-w-[2rem] text-center">
-                            {item.quantity}
-                          </span>
-                          <button
-                            onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
-                            disabled={updating || item.quantity >= item.product.stock}
-                            className="w-8 h-8 rounded-md border-2 border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed font-bold transition"
-                          >
-                            <Plus size={16} className="mx-auto" />
-                          </button>
-                        </div>
-
-                        <div className="text-right">
-                          <div className="text-lg font-bold text-gray-800">
-                            {formatPrice(item.price * item.quantity)}
+                      {/* Product Info */}
+                      <div className="flex-1">
+                        <div className="flex justify-between items-start mb-2">
+                          <div>
+                            <h3 
+                              className="text-lg font-bold text-gray-800 cursor-pointer hover:text-green-600"
+                              onClick={() => navigate(`/products/${item.product.id}`)}
+                            >
+                              {item.product.name}
+                            </h3>
+                            <p className="text-sm text-gray-500">{item.product.category}</p>
                           </div>
-                          <div className="text-sm text-gray-500">
-                            {formatCarbonImpact(item.carbonImpact * item.quantity)} total
+                          <button
+                            onClick={() => handleRemoveItem(item.id)}
+                            disabled={updating}
+                            className="text-red-500 hover:text-red-700 transition disabled:opacity-50"
+                          >
+                            <Trash2 size={20} />
+                          </button>
+                        </div>
+
+                        <div className="flex items-center gap-4 mb-4">
+                          <span className="text-2xl font-bold text-green-600">
+                            {formatPrice(item.price)}
+                          </span>
+                          <span className="text-sm text-gray-500">
+                            {formatCarbonImpact(item.carbonImpact)} per unit
+                          </span>
+                        </div>
+
+                        {/* Quantity Controls */}
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <button
+                              onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
+                              disabled={updating || item.quantity <= 1}
+                              className="w-8 h-8 rounded-md border-2 border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed font-bold transition"
+                            >
+                              <Minus size={16} className="mx-auto" />
+                            </button>
+                            <span className="text-lg font-semibold text-gray-800 min-w-[2rem] text-center">
+                              {item.quantity}
+                            </span>
+                            <button
+                              onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
+                              disabled={updating || item.quantity >= item.product.stock}
+                              className="w-8 h-8 rounded-md border-2 border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed font-bold transition"
+                            >
+                              <Plus size={16} className="mx-auto" />
+                            </button>
+                          </div>
+
+                          <div className="text-right">
+                            <div className="text-lg font-bold text-gray-800">
+                              {formatPrice(item.price * item.quantity)}
+                            </div>
+                            <div className="text-sm text-gray-500">
+                              {formatCarbonImpact(item.carbonImpact * item.quantity)} total
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
 
-              {/* Clear Cart Button */}
-              <button
-                onClick={handleClearCart}
-                disabled={updating}
-                className="text-red-600 hover:text-red-700 font-medium disabled:opacity-50"
-              >
-                Clear Cart
-              </button>
+                {/* Clear Cart Button */}
+                <button
+                  onClick={handleClearCart}
+                  disabled={updating}
+                  className="text-red-600 hover:text-red-700 font-medium disabled:opacity-50"
+                >
+                  Clear Cart
+                </button>
+              </div>
+
+              {/* Carbon Summary */}
+              <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl shadow-md p-6 border border-green-200">
+                <div className="flex items-center gap-2 mb-4">
+                  <Leaf size={24} className="text-green-600" />
+                  <h2 className="text-xl font-bold text-gray-800">Carbon Summary</h2>
+                </div>
+
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-700">Total CO₂ Emissions</span>
+                    <span className="text-2xl font-bold text-green-700">
+                      {cart.totalCarbon.toFixed(2)} kg
+                    </span>
+                  </div>
+
+                  <div className="text-sm text-gray-600 bg-white/50 rounded-lg p-3">
+                    <div className="flex items-center gap-2 mb-2">
+                      <TrendingDown size={16} />
+                      <span className="font-semibold">Environmental Impact</span>
+                    </div>
+                    <div className="space-y-1">
+                      <div>≈ {(cart.totalCarbon * 4.5).toFixed(1)} km driving</div>
+                      <div>≈ {Math.ceil(cart.totalCarbon / 10)} tree{Math.ceil(cart.totalCarbon / 10) > 1 ? 's' : ''} needed (1 year)</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Green Recommendations */}
+              {recommendations.length > 0 && showRecommendations && (
+                <div className="bg-yellow-50 rounded-xl shadow-md p-6 border border-yellow-200">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-center gap-2">
+                      <AlertCircle size={20} className="text-yellow-600" />
+                      <h3 className="font-bold text-gray-800">Greener Alternatives</h3>
+                    </div>
+                    <button
+                      onClick={() => setShowRecommendations(false)}
+                      className="text-gray-500 hover:text-gray-700"
+                    >
+                      ×
+                    </button>
+                  </div>
+                  
+                  <p className="text-sm text-gray-600 mb-4">
+                    Consider these eco-friendlier options to reduce your carbon footprint!
+                  </p>
+
+                  <div className="space-y-3">
+                    {recommendations.map((rec, idx) => (
+                      <div key={idx} className="bg-white rounded-lg p-3">
+                        <div className="text-sm font-semibold text-gray-700 mb-2">
+                          Instead of: {rec.cartItem.product.name}
+                        </div>
+                        {rec.alternatives.map((alt) => (
+                          <div 
+                            key={alt.id}
+                            onClick={() => navigate(`/products/${alt.id}`)}
+                            className="text-sm text-green-600 hover:text-green-700 cursor-pointer flex justify-between items-center py-1"
+                          >
+                            <span>→ {alt.name}</span>
+                            <span className="text-xs">
+                              Save {(rec.cartItem.carbonImpact - alt.carbonImpact).toFixed(2)} kg CO₂
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
-            {/* Cart Summary */}
+            {/* Right Column: Order Summary */}
             <div className="space-y-6">
               {/* Free Shipping Progress */}
               {cart.totalPrice < SHIPPING_CONFIG.FREE_SHIPPING_THRESHOLD && (
@@ -339,78 +414,6 @@ const Cart = () => {
                   Proceed to Checkout
                 </button>
               </div>
-
-              {/* Carbon Summary */}
-              <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl shadow-md p-6 border border-green-200">
-                <div className="flex items-center gap-2 mb-4">
-                  <Leaf size={24} className="text-green-600" />
-                  <h2 className="text-xl font-bold text-gray-800">Carbon Summary</h2>
-                </div>
-
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-700">Total CO₂ Emissions</span>
-                    <span className="text-2xl font-bold text-green-700">
-                      {cart.totalCarbon.toFixed(2)} kg
-                    </span>
-                  </div>
-
-                  <div className="text-sm text-gray-600 bg-white/50 rounded-lg p-3">
-                    <div className="flex items-center gap-2 mb-2">
-                      <TrendingDown size={16} />
-                      <span className="font-semibold">Environmental Impact</span>
-                    </div>
-                    <div className="space-y-1">
-                      <div>≈ {(cart.totalCarbon * 4.5).toFixed(1)} km driving</div>
-                      <div>≈ {Math.ceil(cart.totalCarbon / 21)} tree{Math.ceil(cart.totalCarbon / 21) > 1 ? 's' : ''} needed (1 year)</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Green Recommendations */}
-              {recommendations.length > 0 && showRecommendations && (
-                <div className="bg-yellow-50 rounded-xl shadow-md p-6 border border-yellow-200">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-center gap-2">
-                      <AlertCircle size={20} className="text-yellow-600" />
-                      <h3 className="font-bold text-gray-800">Greener Alternatives</h3>
-                    </div>
-                    <button
-                      onClick={() => setShowRecommendations(false)}
-                      className="text-gray-500 hover:text-gray-700"
-                    >
-                      ×
-                    </button>
-                  </div>
-                  
-                  <p className="text-sm text-gray-600 mb-4">
-                    Consider these eco-friendlier options to reduce your carbon footprint!
-                  </p>
-
-                  <div className="space-y-3">
-                    {recommendations.map((rec, idx) => (
-                      <div key={idx} className="bg-white rounded-lg p-3">
-                        <div className="text-sm font-semibold text-gray-700 mb-2">
-                          Instead of: {rec.cartItem.product.name}
-                        </div>
-                        {rec.alternatives.map((alt) => (
-                          <div 
-                            key={alt.id}
-                            onClick={() => navigate(`/products/${alt.id}`)}
-                            className="text-sm text-green-600 hover:text-green-700 cursor-pointer flex justify-between items-center py-1"
-                          >
-                            <span>→ {alt.name}</span>
-                            <span className="text-xs">
-                              Save {(rec.cartItem.carbonImpact - alt.carbonImpact).toFixed(2)} kg CO₂
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         )}

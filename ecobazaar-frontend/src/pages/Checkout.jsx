@@ -257,7 +257,7 @@ const Checkout = () => {
                   </div>
                   <div className="space-y-1">
                     <div>≈ {(cart.totalCarbon * 4.5).toFixed(1)} km of driving</div>
-                    <div>≈ {Math.ceil(cart.totalCarbon / 21)} tree{Math.ceil(cart.totalCarbon / 21) > 1 ? 's' : ''} needed to offset (1 year)</div>
+                    <div>≈ {Math.ceil(cart.totalCarbon / 10)} tree{Math.ceil(cart.totalCarbon / 10) > 1 ? 's' : ''} needed to offset (1 year)</div>
                     <div className="flex items-center gap-2">
                       {cart.totalCarbon < 10 
                         ? <><Leaf className="w-4 h-4 text-green-600" /> Great choice! Low carbon impact</>

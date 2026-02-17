@@ -23,6 +23,18 @@ export const getSellerSalesReport = async (sellerId, month) => {
 };
 
 /**
+ * Generate AI-powered summary for user purchase report
+ */
+export const generateAISummary = async (userId, month) => {
+  const response = await axiosInstance.post(
+    `/api/reports/user/${userId}/ai-summary`,
+    null,
+    { params: { month } }
+  );
+  return response.data;
+};
+
+/**
  * Check reports service health
  */
 export const checkReportsHealth = async () => {

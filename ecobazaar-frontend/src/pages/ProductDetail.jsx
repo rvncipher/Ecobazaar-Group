@@ -341,7 +341,7 @@ const ProductDetail = () => {
               <div className="flex items-center justify-between text-xs">
                 <span className="text-gray-600">Trees needed to offset:</span>
                 <span className="font-semibold text-gray-700">
-                  {Math.ceil(product.carbonImpact * quantity / 21)} tree{Math.ceil(product.carbonImpact * quantity / 21) > 1 ? 's' : ''} (1 year)
+                  {Math.ceil(product.carbonImpact * quantity / 10)} tree{Math.ceil(product.carbonImpact * quantity / 10) > 1 ? 's' : ''} (1 year)
                 </span>
               </div>
             </div>

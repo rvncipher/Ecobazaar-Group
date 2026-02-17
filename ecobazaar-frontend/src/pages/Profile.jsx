@@ -117,6 +117,37 @@ export default function Profile() {
     }
   }
 
+  const getBadges = () => {
+    return [
+      { name: 'Seed', minScore: 0, maxScore: 199, next: 200, icon: '🌱' },
+      { name: 'Sprout', minScore: 200, maxScore: 499, next: 500, icon: '🌿' },
+      { name: 'Seedling', minScore: 500, maxScore: 999, next: 1000, icon: '🪴' },
+      { name: 'Sapling', minScore: 1000, maxScore: 1999, next: 2000, icon: '🌳' },
+      { name: 'Bloom', minScore: 2000, maxScore: 3499, next: 3500, icon: '🌸' },
+      { name: 'Evergreen', minScore: 3500, maxScore: 4999, next: 5000, icon: '🌲' },
+      { name: 'Forest Guardian', minScore: 5000, maxScore: 7499, next: 7500, icon: '🦉' },
+      { name: 'Ecosystem Architect', minScore: 7500, maxScore: Infinity, next: Infinity, icon: '🌍' }
+    ]
+  }
+
+  const getCurrentBadge = (score) => {
+    const badges = getBadges()
+    for (let i = badges.length - 1; i >= 0; i--) {
+      if (score >= badges[i].minScore) {
+        return badges[i]
+      }
+    }
+    return badges[0]
+  }
+
+  const getBadgeThreshold = (score) => {
+    const current = getCurrentBadge(score)
+    return {
+      current: current.minScore,
+      next: current.next
+    }
+  }
+
   return (
     <Layout>
       <div className="max-w-4xl mx-auto px-4 py-12">
@@ -239,25 +270,87 @@ export default function Profile() {
 
             {/* Eco Score Section */}
             <div className="pb-6">
-              <div className="flex items-center gap-3 mb-3">
+              <div className="flex items-center gap-3 mb-4">
                 <Award className="text-green-600" size={24} />
                 <h2 className="text-xl font-bold text-gray-800">Eco Score</h2>
               </div>
-              <div className="ml-9 flex items-center gap-4">
-                <div className="flex items-center gap-2">
-                  <span className="text-4xl font-bold text-green-600">{ecoScore}</span>
-                  <span className="text-gray-500">points</span>
+
+              {/* Current Score and Badge */}
+              <div className="ml-9 mb-6">
+                <div className="flex items-center gap-4 mb-3">
+                  <div className="flex items-center gap-2">
+                    <span className="text-4xl font-bold text-green-600">{ecoScore}</span>
+                    <span className="text-gray-500">points</span>
+                  </div>
+                  <div className="flex-1 bg-gray-200 rounded-full h-3 max-w-xs">
+                    <div 
+                      className="bg-green-600 h-3 rounded-full transition-all duration-500"
+                      style={{ 
+                        width: getCurrentBadge(ecoScore).next === Infinity 
+                          ? '100%' 
+                          : `${Math.min(((ecoScore - getCurrentBadge(ecoScore).minScore) / (getCurrentBadge(ecoScore).next - getCurrentBadge(ecoScore).minScore)) * 100, 100)}%` 
+                      }}
+                    ></div>
+                  </div>
                 </div>
-                <div className="flex-1 bg-gray-200 rounded-full h-3 max-w-xs">
-                  <div 
-                    className="bg-green-600 h-3 rounded-full transition-all duration-500"
-                    style={{ width: `${Math.min(ecoScore, 100)}%` }}
-                  ></div>
+
+                {/* Current Badge Display */}
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="text-lg font-semibold text-gray-700">Current Badge:</span>
+                  <span className="text-2xl font-bold text-green-600">{getCurrentBadge(ecoScore).name}</span>
+                  <span className="text-sm text-gray-500">
+                    {getCurrentBadge(ecoScore).next !== Infinity 
+                      ? `(${getCurrentBadge(ecoScore).next - ecoScore} points to next level)`
+                      : '(Max Level!)'}
+                  </span>
                 </div>
               </div>
-              <p className="text-gray-500 text-sm ml-9 mt-2">
-                Earn eco points by purchasing sustainable products
-              </p>
+
+              {/* Badge Progress */}
+              <div className="ml-9">
+                <h3 className="text-md font-semibold text-gray-700 mb-3">Badge Journey</h3>
+                <div className="grid grid-cols-4 gap-3">
+                  {getBadges().map((badge, index) => {
+                    const isUnlocked = ecoScore >= badge.minScore;
+                    const isCurrent = getCurrentBadge(ecoScore).name === badge.name;
+                    
+                    return (
+                      <div
+                        key={index}
+                        className={`relative p-3 rounded-lg border-2 transition-all ${
+                          isCurrent
+                            ? 'border-green-500 bg-green-50 shadow-lg scale-105'
+                            : isUnlocked
+                            ? 'border-green-300 bg-green-50'
+                            : 'border-gray-200 bg-gray-50 opacity-60'
+                        }`}
+                      >
+                        <div className="text-center">
+                          <div className="text-2xl mb-1">
+                            {badge.icon}
+                          </div>
+                          <div className={`text-xs font-semibold mb-1 ${
+                            isUnlocked ? 'text-green-700' : 'text-gray-500'
+                          }`}>
+                            {badge.name}
+                          </div>
+                          <div className="text-xs text-gray-600">
+                            {badge.minScore === 0 ? '0+' : badge.next === Infinity ? `${badge.minScore}+` : `${badge.minScore}+`}
+                          </div>
+                        </div>
+                        {isCurrent && (
+                          <div className="absolute -top-2 -right-2 bg-green-600 text-white text-xs px-2 py-1 rounded-full font-bold">
+                            Current
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+                <p className="text-gray-500 text-sm mt-4">
+                  Earn eco points by purchasing sustainable products and reach new badge levels!
+                </p>
+              </div>
             </div>
           </div>
         </div>

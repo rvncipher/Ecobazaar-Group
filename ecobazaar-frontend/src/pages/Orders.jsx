@@ -311,10 +311,16 @@ const Orders = () => {
 
                         {/* Product Details */}
                         <div className="flex-grow">
-                          <h3 className="font-semibold text-gray-900 mb-1">
+                          <h3 className="font-semibold text-gray-900 mb-2">
                             {item.product.name}
                           </h3>
-                          <div className="flex flex-wrap items-center gap-3 mb-2">
+                          <div className="text-sm text-gray-600 mb-1">
+                            <span className="font-medium">Quantity:</span> {item.quantity}
+                          </div>
+                          <div className="text-sm text-gray-600 mb-3">
+                            <span className="font-medium">Price:</span> ₹{item.price.toFixed(2)} × {item.quantity}
+                          </div>
+                          <div className="flex flex-wrap items-center gap-3">
                             <EcoRatingBadge ecoRating={item.product.ecoRating} />
                             {item.product.ecoCertified && (
                               <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-semibold">
@@ -322,12 +328,6 @@ const Orders = () => {
                               </span>
                             )}
                             <CarbonBadge carbonImpact={item.carbonImpact} ecoRating={item.product.ecoRating} size="small" />
-                          </div>
-                          <div className="text-sm text-gray-600">
-                            <span className="font-medium">Quantity:</span> {item.quantity}
-                          </div>
-                          <div className="text-sm text-gray-600">
-                            <span className="font-medium">Price:</span> ₹{item.price.toFixed(2)} × {item.quantity}
                           </div>
                         </div>
 

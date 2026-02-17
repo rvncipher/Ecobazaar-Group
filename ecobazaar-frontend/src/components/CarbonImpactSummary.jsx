@@ -82,21 +82,21 @@ export default function CarbonImpactSummary({ carbonImpactDetails }) {
   return (
     <div className="space-y-4">
       {/* Summary Stats */}
-      <div className="grid grid-cols-3 gap-2">
-        <div className="bg-red-50 border border-red-200 rounded p-3 text-center">
-          <TrendingUp className="text-red-600 mx-auto mb-1" size={20} />
-          <p className="text-lg font-bold text-red-700">{parseFloat(totalCarbonEmitted).toFixed(1)}</p>
-          <p className="text-xs text-red-600">kg Emitted</p>
+      <div className="grid grid-cols-3 gap-6">
+        <div className="text-center">
+          <TrendingUp className="text-red-600 mx-auto mb-2" size={22} />
+          <p className="text-2xl font-bold text-gray-800">{parseFloat(totalCarbonEmitted).toFixed(1)}</p>
+          <p className="text-sm text-gray-600 mt-1">kg Emitted</p>
         </div>
-        <div className="bg-green-50 border border-green-200 rounded p-3 text-center">
-          <TrendingDown className="text-green-600 mx-auto mb-1" size={20} />
-          <p className="text-lg font-bold text-green-700">{parseFloat(estimatedCarbonSaved).toFixed(1)}</p>
-          <p className="text-xs text-green-600">kg Saved</p>
+        <div className="text-center">
+          <TrendingDown className="text-green-600 mx-auto mb-2" size={22} />
+          <p className="text-2xl font-bold text-gray-800">{parseFloat(estimatedCarbonSaved).toFixed(1)}</p>
+          <p className="text-sm text-gray-600 mt-1">kg Saved</p>
         </div>
-        <div className="bg-blue-50 border border-blue-200 rounded p-3 text-center">
-          <Leaf className="text-blue-600 mx-auto mb-1" size={20} />
-          <p className="text-lg font-bold text-blue-700">{totalItems > 0 ? ((ecoFriendlyItemCount / totalItems) * 100).toFixed(0) : 0}%</p>
-          <p className="text-xs text-blue-600">Eco Score</p>
+        <div className="text-center">
+          <Leaf className="text-blue-600 mx-auto mb-2" size={22} />
+          <p className="text-2xl font-bold text-gray-800">{totalItems > 0 ? ((ecoFriendlyItemCount / totalItems) * 100).toFixed(0) : 0}%</p>
+          <p className="text-sm text-gray-600 mt-1">Eco Score</p>
         </div>
       </div>
 
